@@ -18,10 +18,10 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 
             ## Used for adding new event subscriptions. Twitch validates endpoint by requesting you respond with a random challenge
             ## Uncomment when adding new webhook
-            # challenge = json.loads(body).get('challenge')
-            # if challenge is not None and challenge:
-            #     self.handleChallenge(challenge)
-            #     return
+            #challenge = json.loads(body).get('challenge')
+            #if challenge is not None and challenge:
+            #    self.handleChallenge(challenge)
+            #    return
 
             ## Validate request came from Twitch
             if not self.validate(body):
@@ -40,7 +40,7 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
                 return
         else:
             # Post to unknown endpoint
-            self.send_response(404)
+            self.send_response(501)
             self.end_headers()
 
     def validate(self, body):
@@ -59,9 +59,8 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
         LOG.debug("Actual:  \t" + self.headers['Twitch-Eventsub-Message-Signature'])
 
         if self.headers['Twitch-Eventsub-Message-Signature'] != expected_signature_header:
-            LOG.error("Validation failed")
-            print("")
-            self.send_response(403)
+            LOG.warning("Request validation failed")
+            self.send_response(501)
             self.end_headers()
             self.wfile.write(b'Validation failed')
             return False
@@ -88,4 +87,5 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
         self.end_headers()
 
         channelName = json.loads(body).get('event').get('broadcaster_user_name')
+        LOG.info(channelName + "'s stream just ended")
         downloadLatestVod(channelName)
