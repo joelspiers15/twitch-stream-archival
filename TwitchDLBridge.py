@@ -7,6 +7,18 @@ from config import *
 
 LOG = logging.getLogger("TwitchDLBridge")
 
+
+dlQueue = queue.Queue()
+
+def dlQueueConsumer():
+    while True:
+        try:
+            channelName = dlQueue.get()
+            LOG.debug("Consuming item from queue: " + channelName)
+            downloadLatestVod(channelName)
+        except queue.Empty:
+            pass
+
 def downloadLatestVod(channelName):
     LOG.debug("Downloading latest vod for " + channelName)
     vodId = getLatestVodId(channelName)

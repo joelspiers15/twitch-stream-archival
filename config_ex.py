@@ -2,6 +2,7 @@
 log_level = 'INFO'
 twitchDLBin = "~/twitch-dl/twitch-dl.1.16.0.pyz"            # Location of twitch-dl.pyz file
 targetDLDir = "/mnt/D/Media/Twitch"                         # Where to archive Vods to
+dlThreadCount = 2                                           # Number of download threads to use. 1 for no concurrent downloads, more if your network can handle it
 
 # Server
 server_address = 'https://mydomain.com'                     # Public facing address corresponding to your SSL certs

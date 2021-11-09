@@ -5,7 +5,7 @@ import hmac
 import hashlib
 import logging
 from config import *
-from TwitchDLBridge import downloadLatestVod
+from TwitchDLBridge import downloadLatestVod, dlQueue
 
 LOG = logging.getLogger("RequestHandler")
 
@@ -88,4 +88,5 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
 
         channelName = json.loads(body).get('event').get('broadcaster_user_name')
         LOG.info(channelName + "'s stream just ended")
-        downloadLatestVod(channelName)
+        LOG.debug("Adding item to queue: " + channelName)
+        dlQueue.put(channelName)
