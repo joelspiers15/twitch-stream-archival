@@ -1,6 +1,8 @@
 import subprocess
 import logging
 import os
+import _thread as thread, queue, time
+from pathlib import Path
 from config import *
 
 LOG = logging.getLogger("TwitchDLBridge")
@@ -10,7 +12,7 @@ def downloadLatestVod(channelName):
     vodId = getLatestVodId(channelName)
     if vodId is None:
         return False
-    return downloadVod(vodId)
+    return downloadVod(vodId, channelName)
 
 def getLatestVodId(channelName):
     listProcess = subprocess.Popen(  ['python3', twitchDLBin, 'videos', '--limit', "1", channelName],
@@ -36,9 +38,11 @@ def getLatestVodId(channelName):
 
 
 
-def downloadVod(vodId):
+def downloadVod(vodId, channelName):
     LOG.debug("Downloading VOD: " + vodId)
-    os.chdir(targetDLDir)
+    targetDir = targetDLDir + "/" + channelName
+    Path(targetDir).mkdir(parents=True, exist_ok=True)
+    os.chdir(targetDir)
     status = os.system('python3 ' + twitchDLBin + ' download -q source ' + vodId)
 
     if status == 0:
