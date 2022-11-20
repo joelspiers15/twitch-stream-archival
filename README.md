@@ -1,3 +1,7 @@
+# Repo has been archived
+
+[MrBrax's LiveStreamDVR](https://github.com/MrBrax/LiveStreamDVR) is a great solution with a web ui and player.
+
 # Twitch stream archival
 
 The goal of this project is to automate Twitch vod downloads using [twitch-dl](https://github.com/ihabunek/twitch-dl).
